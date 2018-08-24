@@ -19,6 +19,7 @@ import SO_EventsComponent from './components/ClassroomComponent/MyEventsComponen
 import DashboardComponent from './components/ClassroomComponent/DashboardComponent/DashboardComponent'
 import BookingComponent from './components/ClassroomComponent/BookingComponent/BookingComponent'
 import ProfileComponent from './components/ClassroomComponent/ProfileComponent/Profile'
+import postEventComponent from './components/ClassroomComponent/PostEventComponent/postEventContainer'
 import ApproveClubsComponent from './components/ClassroomComponent/ApproveClubsComponent/ApproveClubsContainer'
 
 import ComplaintsComponent from './components/ComplaintsComponent/ComplaintsComponent'
@@ -61,6 +62,7 @@ ReactDOM.render(
                 <Route path="faEvents" component={FA_MyEventsComponent}></Route>
                 <Route path="adEvents" component={AD_EventsComponent}></Route>
                 <Route path="soEvents" component={SO_EventsComponent}></Route>
+                <Route path="postEventDetails" component={postEventComponent}></Route>
                 <Route path="book_room" component={BookingComponent}></Route>
                 <Route path="profile" component={ProfileComponent}></Route>
                 <Route path="approveClubs" component={ApproveClubsComponent}></Route>
