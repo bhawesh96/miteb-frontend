@@ -5,6 +5,9 @@ import TextField from 'material-ui/TextField'
 import Paper from 'material-ui/Paper'
 import {connect} from 'react-redux'
 import FlatButton from 'material-ui/FlatButton';
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
 import {
   Step,
   Stepper,
@@ -39,12 +42,30 @@ class postEventComponent extends Component {
       debit: {
         category: '',
         amt: ''
-      }
+      },
+      fixedHeader: true,
+      fixedFooter: false,
+      stripedRows: false,
+      showRowHover: true,
+      showCheckboxes: false,
+      myArr: {},
+      myArrx: {},
+      allArr: {},
+      originalArr: {},
+      pendingArr: {},
+      approvedArr: {},
+      dialogOpen: false,
+      currentEvent: {},
+      fetching: true,
+      searchContent: '',
+      dateSort: null,
 
     };
     this.getStepContent = this.getStepContent.bind(this);
     this.handleCreditCategory = this.handleCreditCategory.bind(this);
     this.handleCreditAmount = this.handleCreditAmount.bind(this);
+    this.handleDebitCategory = this.handleDebitCategory.bind(this);
+    this.handleDebitAmount = this.handleDebitAmount.bind(this);
     this.addCredit = this.addCredit.bind(this);
     this.addDebit = this.addDebit.bind(this);
     this.cleanCredit = this.cleanCredit.bind(this);
@@ -54,13 +75,13 @@ class postEventComponent extends Component {
     switch (stepIndex) {
       case 0:
         return (
-          <div style={{display: 'flex', textAlign: 'center'}}>
-            <div style={{width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
+          <div style={{display: 'flex', textAlign: 'center'}} height={'440px'}>
+            <div style={{height: '400px',width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
               <h4>Credit</h4>
                 <div>
                   <Table
-                    style={{backgroundColor: '',overflow: 'scroll'}}
-                    height={'440px'}
+                    style={{backgroundColor: ''}}
+                    height={'250px'}
                     fixedHeader={this.state.fixedHeader}
                     fixedFooter={this.state.fixedFooter}
                     selectable={this.state.selectable}
@@ -77,7 +98,7 @@ class postEventComponent extends Component {
                       </TableRow>
                     </TableHeader>
                     <TableBody
-                      displayRowCheckbox={this.state.showCheckboxes}
+                      displayRowCheckbox={false}
                       deselectOnClickaway={this.state.deselectOnClickaway}
                       showRowHover={this.state.showRowHover}
                       stripedRows={this.state.stripedRows}
@@ -91,28 +112,95 @@ class postEventComponent extends Component {
                       )}, this)) : <div><p>{"No Credit Recorded"}</p></div>}
                     </TableBody>
                   </Table>
+                  <div style={{height:'25px'}}>
+                  <TextField
+                  value={this.state.credit.category}
+                  style={{width:'30%'}}
+                  hintText={"Category"}
+                  onChange={this.handleCreditCategory}
+                  />
+                  <TextField
+                  value={this.state.credit.amt}
+                  style={{width:'30%',marginLeft:'5%'}}
+                  hintText="Amount"
+                  onChange={this.handleCreditAmount}
+                  />
+                  <FloatingActionButton 
+                  mini={true}
+                  style={{marginLeft:'5%'}}
+                  onClick={this.addCredit}
+                  >
+                    <ContentAdd />
+                  </FloatingActionButton>
+                  
+                  </div>
                 </div>
 
-              <TextField
-                hintText="Enter Category"
-                onChange = {this.handleCreditCategory}
-                value={this.state.credit.category}
-              /><br />
-              <TextField
-                hintText="Enter Amount"
-                onChange={this.handleCreditAmount}
-                value={this.state.credit.amt}
-              /><br />
-              <RaisedButton
-                  label='add Credit'
-                  primary={true}
-                  onClick={this.addCredit}
-                />
+              
             </div>
-            <div style={{display: this.props.isMobile ? 'none' : '', height: 300, border: '1px solid lightgrey'}}></div>
+            <div style={{display: this.props.isMobile ? 'none' : '', height: '475px', border: '1px solid lightgrey'}}></div>
 
             <div style={{width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
               <h4>Debit</h4>
+              <div>
+                  <Table
+                    style={{backgroundColor: ''}}
+                    height={'250px'}
+                    fixedHeader={this.state.fixedHeader}
+                    fixedFooter={this.state.fixedFooter}
+                    selectable={this.state.selectable}
+                    multiSelectable={this.state.multiSelectable}
+                  >
+                    <TableHeader
+                      displaySelectAll={this.state.showCheckboxes}
+                      adjustForCheckbox={this.state.showCheckboxes}
+                      enableSelectAll={this.state.enableSelectAll}
+                    >
+                      <TableRow style={{backgroundColor: '#EFF0F2'}}>
+                        <TableHeaderColumn style={{color: '#000', fontWeight: 700, width: '10%'}}>Category</TableHeaderColumn>
+                        <TableHeaderColumn style={{color: '#000', fontWeight: 700, width: '10%'}}>Amount</TableHeaderColumn>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody
+                      displayRowCheckbox={false}
+                      deselectOnClickaway={this.state.deselectOnClickaway}
+                      showRowHover={this.state.showRowHover}
+                      stripedRows={this.state.stripedRows}
+                    >
+                    { Object.keys(this.state.debitArray).length > 0 ? (Object.values(this.state.debitArray).map(function(debit, index) {
+                      return (
+                          <TableRow key={index}>
+                            <TableRowColumn style={{width: '10%'}}>{debit.category}</TableRowColumn>
+                            <TableRowColumn style={{width: '10%'}}>{debit.amt}</TableRowColumn>
+                          </TableRow>
+                      )}, this)) : <div><p>{"No Debit Recorded"}</p></div>}
+                    </TableBody>
+                  </Table>
+                  <div style={{height:'25px'}}>
+                  <TextField
+                  value={this.state.debit.category}
+                  style={{width:'30%'}}
+                  hintText={"Category"}
+                  onChange={this.handleDebitCategory}
+                  />
+                  <TextField
+                  value={this.state.debit.amt}
+                  style={{width:'30%',marginLeft:'5%'}}
+                  hintText="Amount"
+                  onChange={this.handleDebitAmount}
+                  />
+                  <FloatingActionButton 
+                  mini={true}
+                  style={{marginLeft:'5%'}}
+                  onClick={this.addDebit}
+                  >
+                    <ContentAdd />
+                  </FloatingActionButton>
+                  
+                  </div>
+                </div>
+
+              
             </div>
           </div>
         );
@@ -143,6 +231,13 @@ class postEventComponent extends Component {
   handleCreditAmount(e) {
     this.setState({credit: {amt: e.target.value, category: this.state.credit.category}});
   }
+  handleDebitCategory(e) {
+    this.setState({debit: {category: e.target.value, amt: this.state.debit.amt}});
+  }
+
+  handleDebitAmount(e) {
+    this.setState({debit: {amt: e.target.value, category: this.state.debit.category}});
+  }
   addCredit() {
     let tempCreditArray = this.state.creditArray;
     tempCreditArray.push(this.state.credit);
@@ -156,15 +251,15 @@ class postEventComponent extends Component {
     this.setState({credit: {category: '',amt:''}})
   }
 
+  cleanDebit() {
+    this.setState({debit: {category: '',amt:''}})
+  }
+
   addDebit(category, amount) {
-    let tempDebit = {
-      category: category,
-      amount: amount
-    }
-    this.setState({debit: tempDebit})
-    let tempDebitArray = this.state.debitArray
-    tempDebitArray.push(tempDebit)
+    let tempDebitArray = this.state.debitArray;
+    tempDebitArray.push(this.state.debit);
     this.setState({debitArray: tempDebitArray})
+    this.cleanDebit()
   }
 
   handleNext() {
@@ -188,9 +283,9 @@ class postEventComponent extends Component {
   render() {
     return (
       <div style={{display: 'flex', justifyContent: 'center', padding: 15}}>
-        <Paper style={{background: '', width: this.props.isMobile? '98%': '90%', height: '500px', display: 'flex', justifyContent: 'center'}} zDepth={2}>
+        <Paper style={{background: '', width: this.props.isMobile? '98%': '90%', height: '575px', display: 'flex', justifyContent: 'center'}} zDepth={2}>
           <div style={{width: '100%', maxWidth: 700}}>
-            <Stepper linear={false} activeStep={this.state.stepIndex} orientation={this.props.isMobile ? 'vertical' : 'horizontal'} style={{width: '80%', margin: '0 auto'}} connector={<ArrowForwardIcon />}>
+            <Stepper linear={false} activeStep={this.state.stepIndex} orientation={this.props.isMobile ? 'vertical' : 'horizontal'} style={{height: '50px',width: '80%', margin: '0 auto'}} connector={<ArrowForwardIcon />}>
               <Step>
                 <StepLabel>Financials</StepLabel>
               </Step>
@@ -206,12 +301,12 @@ class postEventComponent extends Component {
 
             {this.getStepContent(this.state.stepIndex)}
 
-            <div style={{marginTop: 24, marginBottom: 12}}>
+            <div style={{height: '25px', marginBottom: 12}}>
               <FlatButton
                 label="Back"
                 disabled={this.state.stepIndex === 0}
                 onClick={this.handlePrev}
-                style={{marginRight: 12}}
+                style={{marginRight: '70%',marginTop:'10px'}}
               />
                 <RaisedButton
                   label={this.state.stepIndex === 2 ? 'Finish' : 'Next'}
