@@ -7,7 +7,7 @@ import {connect} from 'react-redux'
 import FlatButton from 'material-ui/FlatButton';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
-
+import FinishedContainer from './FinishedContainer.js'
 import {
   Step,
   Stepper,
@@ -66,6 +66,7 @@ class postEventComponent extends Component {
     this.handleCreditAmount = this.handleCreditAmount.bind(this);
     this.handleDebitCategory = this.handleDebitCategory.bind(this);
     this.handleDebitAmount = this.handleDebitAmount.bind(this);
+    this.handleFinish = this.handleFinish.bind(this);
     this.addCredit = this.addCredit.bind(this);
     this.addDebit = this.addDebit.bind(this);
     this.cleanCredit = this.cleanCredit.bind(this);
@@ -76,9 +77,9 @@ class postEventComponent extends Component {
       case 0:
         return (
           <div style={{display: 'flex', textAlign: 'center'}} height={'440px'}>
-            <div style={{height: '400px',width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
+            <div style={{height: this.props.isMobile? 'auto':'400px',width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
               <h4>Credit</h4>
-                <div>
+                <div style={{width: '100%'}}>
                   <Table
                     style={{backgroundColor: ''}}
                     height={'250px'}
@@ -142,7 +143,7 @@ class postEventComponent extends Component {
 
             <div style={{width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
               <h4>Debit</h4>
-              <div>
+              <div style={{width: '100%'}}>
                   <Table
                     style={{backgroundColor: ''}}
                     height={'250px'}
@@ -207,20 +208,22 @@ class postEventComponent extends Component {
 
       case 1:
         return (
-          <p>
-            {'An ad group contains one or more ads which target a shared set of keywords.'}
-          </p>
+          <div style={{textAlign:'center'}}>
+          <TextField
+                  hintText={"No of total participants"}
+                  onChange={this.handleParticipants}
+                  />
+          <br></br>
+           <TextField
+                  hintText={"No of external participants"}
+                  onChange={this.handleParticipants}
+                  />
+          </div>
         );
-
-      case 2:
+      case 2: 
         return (
-          <p>
-            {'Try out different ad text to see what brings in the most customers, and learn ' +
-            'how to enhance your ads using features like ad extensions. If you run into any ' +
-            'problems with your ads, find out how to tell if they\'re running and how to ' +
-            'resolve approval issues.'}
-          </p>
-        );
+            <FinishedContainer />
+          );
     }
   }
 
@@ -265,7 +268,7 @@ class postEventComponent extends Component {
   handleNext() {
     const {stepIndex} = this.state;
 
-    if (stepIndex < 2) {
+    if (stepIndex < 1) {
       this.setState({stepIndex: stepIndex + 1});
     }
   }
@@ -278,42 +281,51 @@ class postEventComponent extends Component {
     }
   }
 
+  handleFinish() {
+    this.state.finished=true
+    console.log(this.state.finished)
+    console.log("finished")
+  }
+
 
 
   render() {
     return (
       <div style={{display: 'flex', justifyContent: 'center', padding: 15}}>
-        <Paper style={{background: '', width: this.props.isMobile? '98%': '90%', height: '575px', display: 'flex', justifyContent: 'center'}} zDepth={2}>
+        <Paper style={{background: '', width: this.props.isMobile? '98%': '90%', height: this.props.isMobile?'700px':'575px', display: 'flex', justifyContent: 'center'}} zDepth={2}>
           <div style={{width: '100%', maxWidth: 700}}>
-            <Stepper linear={false} activeStep={this.state.stepIndex} orientation={this.props.isMobile ? 'vertical' : 'horizontal'} style={{height: '50px',width: '80%', margin: '0 auto'}} connector={<ArrowForwardIcon />}>
-              <Step>
-                <StepLabel>Financials</StepLabel>
-              </Step>
+          {this.state.finished? (<FinishedContainer />) :
+            (
+              <div style={{width: this.props.isMobile ? '95%' : '85%'}}>
+              <Stepper linear={false} activeStep={this.state.stepIndex} orientation={this.props.isMobile ? 'vertical' : 'horizontal'} style={{height: this.props.isMobile? 'auto':'50px',width: '80%', margin: '0 auto'}} connector={<ArrowForwardIcon />}>
+                <Step>
+                  <StepLabel>Financials</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Participation</StepLabel>
+                </Step>
+                <Step>
+                  <StepLabel>Book Another Event!</StepLabel>
+                </Step>
+              </Stepper>
 
-              <Step>
-                <StepLabel>Participation</StepLabel>
-              </Step>
+              {this.getStepContent(this.state.stepIndex)}
 
-              <Step>
-                <StepLabel>Book Another Event!</StepLabel>
-              </Step>
-            </Stepper>
-
-            {this.getStepContent(this.state.stepIndex)}
-
-            <div style={{height: '25px', marginBottom: 12}}>
-              <FlatButton
-                label="Back"
-                disabled={this.state.stepIndex === 0}
-                onClick={this.handlePrev}
-                style={{marginRight: '70%',marginTop:'10px'}}
-              />
-                <RaisedButton
-                  label={this.state.stepIndex === 2 ? 'Finish' : 'Next'}
-                  primary={true}
-                  onClick={this.handleNext}
+              <div style={{height: '25px', marginBottom: 12}}>
+                <FlatButton
+                  label="Back"
+                  disabled={this.state.stepIndex === 0}
+                  onClick={this.handlePrev}
+                  style={{marginRight: '70%',marginTop:'10px'}}
                 />
+                  <RaisedButton
+                    label={this.state.stepIndex === 1 ? 'Submit' : 'Next'}
+                    primary={true}
+                    onClick={this.state.stepIndex===1? this.handleFinish : this.handleNext}
+                  />
+              </div>
             </div>
+          )}
           </div>
         </Paper>
 
