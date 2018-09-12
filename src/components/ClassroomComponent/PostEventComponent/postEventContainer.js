@@ -78,7 +78,8 @@ class postEventComponent extends Component {
         return (
           <div style={{display: 'flex', textAlign: 'center'}} height={'440px'}>
             <div style={{height: this.props.isMobile? 'auto':'400px',width: this.props.isMobile ? '100%' : '50%',flexDirection: 'column', justifyContent: 'space-around'}}>
-              <h4>Credit</h4>
+              <h4>{this.props.currEvent && this.props.currEvent.title}</h4>
+              {/*<h4>Credit</h4>*/}
                 <div style={{width: '100%'}}>
                   <Table
                     style={{backgroundColor: ''}}
@@ -287,8 +288,6 @@ class postEventComponent extends Component {
     console.log("finished")
   }
 
-
-
   render() {
     return (
       <div style={{display: 'flex', justifyContent: 'center', padding: 15}}>
@@ -336,10 +335,11 @@ class postEventComponent extends Component {
 
 function mapStateToProps(state) {
   const {isMobile} = state.toggler
-  const {user} = state.authentication
+  const {user, currEvent} = state.authentication
   return {
     isMobile,
-    user
+    user,
+    currEvent
   }   
 }
 export default connect(mapStateToProps)(postEventComponent);

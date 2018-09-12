@@ -126,12 +126,10 @@ class MyEventsComponent extends Component {
     this.setState({myArrx})
   }
 
-  handlePostEvent(eventID) {
-    console.log("evnt id is")
-    console.log(eventID.key)
-    return (
-      <postEventComponent event={eventID} />
-      );
+  handlePostEvent(currEvent) {
+    const {dispatch} = this.props;
+    dispatch({type: "POST_EVENT", currEvent: currEvent})
+    hashHistory.push("/dashboard/postEventDetails")
   }
 
   filterAndStore(arr) {
