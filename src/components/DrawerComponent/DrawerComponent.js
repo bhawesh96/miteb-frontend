@@ -99,12 +99,6 @@ class DrawerComponent extends Component {
                 primaryText="My Events"
                 leftIcon={<IconAnalytics color={'#FFFFFF'} />} />
 
-            <MenuItem
-                style={Object.assign(this.state.activeItem === '/dashboard/postEventDetails' ? active:'', menuItemStyle)}
-                key="/dashboard/postEventDetails"
-                primaryText="Post Event Details"
-                leftIcon={<IconAnalytics color={'#FFFFFF'} />} />
-            
             {this.props.user && this.props.user.isSC ?
             <MenuItem
                 style={Object.assign(this.state.activeItem === '/dashboard/approveClubs' ? active:'', menuItemStyle)}

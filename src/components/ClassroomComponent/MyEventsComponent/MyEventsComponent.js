@@ -8,6 +8,8 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
+import { connect } from 'react-redux'
+import { Link, hashHistory } from 'react-router'
 import CheckCircleIcon from 'material-ui/svg-icons/action/check-circle';
 import CrossCircleIcon from 'material-ui/svg-icons/action/highlight-off';
 import IconButton from 'material-ui/IconButton'
@@ -19,8 +21,6 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
 import RaisedButton from 'material-ui/RaisedButton'
-import {hashHistory} from 'react-router'
-import {connect} from 'react-redux'
 import {firebaseDB} from '../../../firebaseConfig'
 import SearchSortContainer from './SearchSortContainer'
 import ViewEventDialog from '../../Dialogs/ViewEventDialogComponent'
@@ -33,6 +33,7 @@ import UpArrow from 'material-ui/svg-icons/navigation/arrow-upward'
 import DownArrow from 'material-ui/svg-icons/navigation/arrow-downward'
 import ReactTooltip from 'react-tooltip'
 import moment from 'moment'
+import postEventComponent from '../PostEventComponent/postEventContainer.js'
 
 class MyEventsComponent extends Component {
   constructor(props) {
@@ -43,6 +44,7 @@ class MyEventsComponent extends Component {
     this.handleIcon = this.handleIcon.bind(this)
     this.handleSearch = this.handleSearch.bind(this)
     this.handleSort = this.handleSort.bind(this)
+    this.handlePostEvent = this.handlePostEvent.bind(this)
 
     this.state = {
       fixedHeader: true,
@@ -122,6 +124,14 @@ class MyEventsComponent extends Component {
         return (bDate - aDate);
       });
     this.setState({myArrx})
+  }
+
+  handlePostEvent(eventID) {
+    console.log("evnt id is")
+    console.log(eventID.key)
+    return (
+      <postEventComponent event={eventID} />
+      );
   }
 
   filterAndStore(arr) {
@@ -273,6 +283,10 @@ class MyEventsComponent extends Component {
                       >
                       <MenuItem primaryText="View" onClick={() => this.showDialog(event)}/>
                       <MenuItem hidden={!event.receiptURL} primaryText="Download Receipt" onClick={() => {window.location=(event.receiptURL)}}/>
+                      <MenuItem
+                      primaryText="Post Event Detail"
+                      onClick={() => this.handlePostEvent(event)}
+                      />
                       </IconMenu>}
                     </TableRowColumn>
                   </TableRow>
