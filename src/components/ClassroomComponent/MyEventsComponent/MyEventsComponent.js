@@ -282,6 +282,7 @@ class MyEventsComponent extends Component {
                       <MenuItem primaryText="View" onClick={() => this.showDialog(event)}/>
                       <MenuItem hidden={!event.receiptURL} primaryText="Download Receipt" onClick={() => {window.location=(event.receiptURL)}}/>
                       <MenuItem
+                      hidden={event.postEventFlag}
                       primaryText="Post Event Detail"
                       onClick={() => this.handlePostEvent(event)}
                       />

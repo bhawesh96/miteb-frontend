@@ -309,6 +309,14 @@ class HorizontalLinearStepper extends React.Component {
         "clubID": this.props.user.uid,
         "FA_name": this.props.user.fa.name,
         "FA_date": this.props.user.isSC ? moment(this.state.today, 'DD-MM-YYYY').format('DD-MM-YYYY') : null,
+        "postEventFlag":false,
+        "postEventDetails": {
+          "creditArray": [],
+          "debitArray": [],
+          "totalParticipants":0,
+          "externalParticipants":0,
+          "notes":''
+        }
       }
 
       var eventID = newData.clubID.slice(0, 4);

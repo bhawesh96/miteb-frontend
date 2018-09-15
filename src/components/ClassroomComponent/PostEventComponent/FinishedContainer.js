@@ -13,8 +13,8 @@ class FinishedContainer extends Component {
         <div style={{minHeight: 300}}>
           <img src={require('../../../assets/rocket-loader.gif')} style={{width: this.props.isMobile ? '98%' : '50%'}}/>
         </div>
-          <p>Your details for the event titled this.props.event have been recorded. </p>
-          <p>You can now proceed to book rooms for further events under <Link to="dashboard/book_room">Room Booking</Link></p>
+          <p>Your details for the event titled '{this.props.event.title}' have been recorded. </p>
+          <p>You can now proceed to book rooms for your upcoming events under <Link to="dashboard/book_room">Room Booking</Link></p>
       </div>
     );
   }
