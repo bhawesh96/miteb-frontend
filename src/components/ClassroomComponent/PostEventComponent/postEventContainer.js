@@ -26,6 +26,7 @@ import {
 import IconButton from 'material-ui/IconButton';
 import ContentRemoveCircle from 'material-ui/svg-icons/content/remove-circle'
 import { StepContent } from 'material-ui/Stepper';
+import EditTable from '../../EditTable/EditTable';
 
 class postEventComponent extends Component {
   constructor(props) {
@@ -88,79 +89,19 @@ class postEventComponent extends Component {
   }
 
   getStepContent(stepIndex) {
+    const cols = [
+      { title: 'Category',fieldName:'category' },
+      { title: 'Amount',fieldName:'amount' },
+    ];
     switch (stepIndex) {
       case 0:
         return (
-          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column',marginTop:'3em' }}>
+          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
             <div style={{ width: '100%', flexDirection: 'column', justifyContent: 'space-around' }}>
               <div style={{ width: '100%' }}>
-                <Table
-                  style={{ backgroundColor: '', marginBottom: 30, overflow:'scroll',boxSizing:'border-box' }}
-                  fixedHeader={this.state.fixedHeader}
-                  fixedFooter={this.state.fixedFooter}
-                  selectable={this.state.selectable}
-                  multiSelectable={this.state.multiSelectable}
-                  height='30vh'
-                >
-                  <TableHeader
-                    displaySelectAll={this.state.showCheckboxes}
-                    adjustForCheckbox={this.state.showCheckboxes}
-                    enableSelectAll={this.state.enableSelectAll}
-                  >
-                    <TableRow style={{ backgroundColor: '#EFF0F2',display:'flex'}}>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex:'2', boxSizing:'border-box', paddingTop:20 }}>Category</TableHeaderColumn>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex:'2', boxSizing:'border-box', paddingTop:20 }}>Amount</TableHeaderColumn>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex:'1' }}></TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody
-                    displayRowCheckbox={false}
-                    deselectOnClickaway={this.state.deselectOnClickaway}
-                    showRowHover={this.state.showRowHover}
-                    stripedRows={this.state.stripedRows}
-                  >
-                    {Object.keys(this.state.creditArray).length > 0 ? (this.state.creditArray.map(function (credit, index) {
-                      return (
-                        <TableRow key={index} style={{display:'flex'}}>
-                          <TableRowColumn style={{ flex:'2',boxSizing:'border-box', paddingTop:20 }}>{credit.category}</TableRowColumn>
-                          <TableRowColumn style={{ flex:'2',boxSizing:'border-box', paddingTop:20 }}>{credit.amt}</TableRowColumn>
-                          <TableRowColumn style={{ flex:'1' }}>
-                            <IconButton tooltip="remove" iconStyle={{ color: '#03a9f4' }} onClick={() => this.handleRemoveCredit(index)}>
-                              <ContentRemoveCircle />
-                            </IconButton>
-                          </TableRowColumn>
-
-                        </TableRow>
-                      )
-                    }, this)) : <p>{"No Credit Recorded"}</p>}
-                  </TableBody>
-                </Table>
-                <div style={{ height: '25px', display: 'flex', justifyContent: 'center', flexDirection: 'row', margin: 'auto', justifyContent: 'center', marginTop: '1em', marginBottom: '1em' }}>
-                  <TextField
-                    value={this.state.credit.category}
-                    style={{ flex: 2, margin: '0 1em' }}
-                    hintText={"Category"}
-                    onChange={this.handleCreditCategory}
-                    errorText={this.state.creditCatError}
-                    required
-                  />
-                  <TextField
-                    value={this.state.credit.amt}
-                    style={{ flex: 2, margin: '0 1em' }}
-                    hintText="Amount"
-                    onChange={this.handleCreditAmount}
-                    errorText={this.state.creditAmtError}
-                    required
-                  />
-                  <div style={{ flex: 1, margin: '0 1em' }}>
-                    <FloatingActionButton
-                      mini={true}
-                      onClick={this.addCredit}
-                    >
-                      <ContentAdd />
-                    </FloatingActionButton>
-                  </div>
-                </div>
+                <EditTable
+                  cols={cols}
+                />
               </div>
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
@@ -182,11 +123,11 @@ class postEventComponent extends Component {
 
       case 1:
         return (
-          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop:'3em' ,boxSizing:'border-box'}}>
+          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em', boxSizing: 'border-box' }}>
             <div style={{ width: '100%', flexDirection: 'column', justifyContent: 'space-around' }}>
               <div style={{ width: '100%' }}>
                 <Table
-                  style={{ backgroundColor: '', marginBottom: 30, overflow:'scroll' }}
+                  style={{ backgroundColor: '', marginBottom: 30, overflow: 'scroll' }}
                   fixedHeader={this.state.fixedHeader}
                   fixedFooter={this.state.fixedFooter}
                   selectable={this.state.selectable}
@@ -198,10 +139,10 @@ class postEventComponent extends Component {
                     adjustForCheckbox={this.state.showCheckboxes}
                     enableSelectAll={this.state.enableSelectAll}
                   >
-                    <TableRow style={{ backgroundColor: '#EFF0F2',display:'flex' }}>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex:'2', boxSizing:'border-box', paddingTop:20  }}>Category</TableHeaderColumn>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex:'2', boxSizing:'border-box', paddingTop:20  }}>Amount</TableHeaderColumn>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex:'1' }}></TableHeaderColumn>
+                    <TableRow style={{ backgroundColor: '#EFF0F2', display: 'flex' }}>
+                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>Category</TableHeaderColumn>
+                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>Amount</TableHeaderColumn>
+                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex: '1' }}></TableHeaderColumn>
                     </TableRow>
                   </TableHeader>
                   <TableBody
@@ -212,10 +153,10 @@ class postEventComponent extends Component {
                   >
                     {Object.keys(this.state.debitArray).length > 0 ? (Object.values(this.state.debitArray).map(function (debit, index) {
                       return (
-                        <TableRow key={index} style={{display:'flex'}}>
-                          <TableRowColumn style={{ flex:'2',boxSizing:'border-box', paddingTop:20 }}>{debit.category}</TableRowColumn>
-                          <TableRowColumn style={{ flex:'2',boxSizing:'border-box', paddingTop:20 }}>{debit.amt}</TableRowColumn>
-                          <TableRowColumn style={{ flex:'1' }}>
+                        <TableRow key={index} style={{ display: 'flex' }}>
+                          <TableRowColumn style={{ flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>{debit.category}</TableRowColumn>
+                          <TableRowColumn style={{ flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>{debit.amt}</TableRowColumn>
+                          <TableRowColumn style={{ flex: '1' }}>
                             <IconButton tooltip="remove" iconStyle={{ color: '#03a9f4' }} onClick={() => this.handleRemoveDebit(index)}>
                               <ContentRemoveCircle />
                             </IconButton>
@@ -273,7 +214,7 @@ class postEventComponent extends Component {
         )
       case 2:
         return (
-          <div style={{ textAlign: 'center', marginTop: '3em' ,boxSizing:'border-box'}}>
+          <div style={{ textAlign: 'center', marginTop: '3em', boxSizing: 'border-box' }}>
             <TextField
               floatingLabelText={"Total participants"}
               onBlur={this.handleTotalParticipants}
@@ -464,7 +405,7 @@ class postEventComponent extends Component {
       updates['/events/' + eventID + '/postEventDetails/externalParticipants'] = this.state.externalParticipants;
       updates['/events/' + eventID + '/postEventDetails/notes'] = this.state.notes;
       updates['/events/' + eventID + '/postEventFlag'] = true;
-      firebaseDB.ref().update(updates)      
+      firebaseDB.ref().update(updates)
     }
   }
 
@@ -479,9 +420,9 @@ class postEventComponent extends Component {
   render() {
     let { isMobile } = this.props;
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding:isMobile?'2em 0.25em':'2em 7em' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: isMobile ? '2em 0.25em' : '2em 7em' }}>
         <Paper zDepth={2}>
-          <div style={{ width: '100%', maxWidth: 700, padding: '0em 0.5em', margin: 'auto', boxSizing: 'border-box',marginBottom:'10em'}}>
+          <div style={{ width: '100%', maxWidth: 700, padding: '0em 0.5em', margin: 'auto', boxSizing: 'border-box', marginBottom: '10em' }}>
             {this.state.finished ? (<FinishedContainer event={this.props.currEvent} />) :
               (
                 isMobile ? (
