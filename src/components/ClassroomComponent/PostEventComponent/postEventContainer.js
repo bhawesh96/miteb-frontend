@@ -27,6 +27,7 @@ import IconButton from 'material-ui/IconButton';
 import ContentRemoveCircle from 'material-ui/svg-icons/content/remove-circle'
 import { StepContent } from 'material-ui/Stepper';
 import EditTable from '../../EditTable/EditTable';
+import { Typography } from '@material-ui/core/Typography';
 
 class postEventComponent extends Component {
   constructor(props) {
@@ -47,10 +48,8 @@ class postEventComponent extends Component {
       externalParticipants: 0,
       tParticipantsError: '',
       eParticipantsError: '',
-      creditCatError: '',
-      creditAmtError: '',
-      debitCatError: '',
-      debitAmtError: '',
+      creditErr:'',
+      debitErr:'',
       fixedHeader: true,
       fixedFooter: false,
       stripedRows: false,
@@ -86,6 +85,8 @@ class postEventComponent extends Component {
     this.cleanCredit = this.cleanCredit.bind(this);
     this.handleRemoveCredit = this.handleRemoveCredit.bind(this);
     this.handleNotes = this.handleNotes.bind(this);
+    this.handleCreditChange = this.handleCreditChange.bind(this);
+    this.handleDebitChange = this.handleDebitChange.bind(this);
   }
 
   getStepContent(stepIndex) {
@@ -93,14 +94,18 @@ class postEventComponent extends Component {
       { title: 'Category', fieldName: 'category' },
       { title: 'Amount', fieldName: 'amount' },
     ];
+    const {creditErr, debitErr} = this.state;
     switch (stepIndex) {
       case 0:
         return (
           <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
+            <p style={{color:'#E30022', margin:'0.5rem'}}>{creditErr}</p>
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
 
               <EditTable
                 cols={cols}
+                onChange={this.handleCreditChange}
+                id='credit'
               />
 
             </div>
@@ -123,77 +128,14 @@ class postEventComponent extends Component {
 
       case 1:
         return (
-          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em', boxSizing: 'border-box' }}>
-            <div style={{ width: '100%', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <div style={{ width: '100%' }}>
-                <Table
-                  style={{ backgroundColor: '', marginBottom: 30, overflow: 'scroll' }}
-                  fixedHeader={this.state.fixedHeader}
-                  fixedFooter={this.state.fixedFooter}
-                  selectable={this.state.selectable}
-                  multiSelectable={this.state.multiSelectable}
-                  height='30vh'
-                >
-                  <TableHeader
-                    displaySelectAll={this.state.showCheckboxes}
-                    adjustForCheckbox={this.state.showCheckboxes}
-                    enableSelectAll={this.state.enableSelectAll}
-                  >
-                    <TableRow style={{ backgroundColor: '#EFF0F2', display: 'flex' }}>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>Category</TableHeaderColumn>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>Amount</TableHeaderColumn>
-                      <TableHeaderColumn style={{ color: '#000', fontWeight: 700, flex: '1' }}></TableHeaderColumn>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody
-                    displayRowCheckbox={false}
-                    deselectOnClickaway={this.state.deselectOnClickaway}
-                    showRowHover={this.state.showRowHover}
-                    stripedRows={this.state.stripedRows}
-                  >
-                    {Object.keys(this.state.debitArray).length > 0 ? (Object.values(this.state.debitArray).map(function (debit, index) {
-                      return (
-                        <TableRow key={index} style={{ display: 'flex' }}>
-                          <TableRowColumn style={{ flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>{debit.category}</TableRowColumn>
-                          <TableRowColumn style={{ flex: '2', boxSizing: 'border-box', paddingTop: 20 }}>{debit.amt}</TableRowColumn>
-                          <TableRowColumn style={{ flex: '1' }}>
-                            <IconButton tooltip="remove" iconStyle={{ color: '#03a9f4' }} onClick={() => this.handleRemoveDebit(index)}>
-                              <ContentRemoveCircle />
-                            </IconButton>
-                          </TableRowColumn>
-                        </TableRow>
-                      )
-                    }, this)) : <p>{"No Debit Recorded"}</p>}
-                  </TableBody>
-                </Table>
-                <div style={{ height: '25px', display: 'flex', justifyContent: 'center', flexDirection: 'row', margin: 'auto', justifyContent: 'center', marginTop: '1em', marginBottom: '1em' }}>
-                  <TextField
-                    value={this.state.debit.category}
-                    style={{ flex: 2, margin: '0 1em' }}
-                    hintText={"Category"}
-                    onChange={this.handleDebitCategory}
-                    errorText={this.state.debitCatError}
-                    required
-
-                  />
-                  <TextField
-                    value={this.state.debit.amt}
-                    style={{ flex: 2, margin: '0 1em' }}
-                    hintText="Amount"
-                    onChange={this.handleDebitAmount}
-                    errorText={this.state.debitAmtError}
-                    required
-                  />
-                  <div style={{ flex: 1, margin: '0 1em' }}>
-                    <FloatingActionButton
-                      mini={true}
-                      onClick={this.addDebit}
-                    >
-                      <ContentAdd />
-                    </FloatingActionButton>
-                  </div>
-                </div>
-              </div>
+          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
+            <p style={{color:'#E30022', margin:'0.5rem'}}>{debitErr}</p>
+            <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
+              <EditTable
+                cols={cols}
+                onChange={this.handleDebitChange}
+                id='debit'
+              />
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
               <FlatButton
@@ -256,7 +198,12 @@ class postEventComponent extends Component {
         );
     }
   }
-
+  handleCreditChange(rows) {
+    this.setState({ creditArray: rows });
+  }
+  handleDebitChange(rows){
+    this.setState({debitArray: rows});
+  }
   handleNotes(e) {
     this.setState({ notes: e.target.value })
   }
@@ -352,23 +299,11 @@ class postEventComponent extends Component {
   handleNext() {
     const { stepIndex } = this.state;
     if (stepIndex == 0 && this.state.creditArray.length == 0) {
-      // credit
-      if (this.state.credit.category == '') {
-        this.setState({ creditCatError: 'This field is empty' })
-      }
-      if (this.state.credit.amt == '') {
-        this.setState({ creditAmtError: 'This field is empty' })
-      }
+      this.setState({creditErr:'Please Enter atleast one field'});
     } else if (stepIndex == 1 && this.state.debitArray.length == 0) {
-      console.log("hello")
-      if (this.state.debit.category == '') {
-        this.setState({ debitCatError: 'This field is empty' })
-      }
-      if (this.state.debit.amt == '') {
-        this.setState({ debitAmtError: 'This field is empty' })
-      }
+      this.setState({debitErr:'Please Enter atleast one field'});
     } else {
-      this.setState({ creditCatError: '', creditAmtError: '', debitCatError: '', debitAmtError: '' })
+      this.setState({ creditErr: '', debitErr: '' })
       if (stepIndex < 2) {
         this.setState({ stepIndex: stepIndex + 1 });
       }
