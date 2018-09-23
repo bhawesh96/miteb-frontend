@@ -4,6 +4,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import ContentRemoveCircle from 'material-ui/svg-icons/content/remove-circle';
 import Paper from 'material-ui/Paper'
+import TextField from '@material-ui/core/TextField';
 
 export default class EditTable extends Component {
     constructor(props) {
@@ -13,61 +14,79 @@ export default class EditTable extends Component {
         };
         this.handleAdd = this.handleAdd.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
+        this.handleChange = this.handleChange.bind(this);
     }
     handleRemove(index) {
+        console.log("Delete");
         return (event) => {
             this.setState((prev) => {
                 prev.rows.splice(index, 1)
+                console.log(prev);
                 return { rows: prev.rows };
             })
         }
     }
     handleAdd(event) {
         this.setState((prev) => {
-            return { rows: prev.rows.concat([{ category: '', amount: 0 }]) };
+            let a = {};
+            for (let i = 0; i < this.props.cols.length; i++) {
+                a[this.props.cols[i].fieldName] = '';
+            }
+            return { rows: prev.rows.concat([a]) };
         });
     }
-    handleCategoryChange(index) {
+    handleChange(index, col) {
         return (event) => {
             this.setState((prev) => {
-                prev.rows[index].category = event.target.value;
-                return { rows: prev };
+                prev.rows[index][col] = document.getElementById(col + '' + index).value;
+                return { rows: prev.rows };
             });
         }
     }
     render() {
         return (
             <div>
-                <Paper style={{ width: '100%', height: '40vh', overflowX: 'hidden', overFlowY: 'scroll' }} height='30vh'>
-                    <Table style={{ width: '100%', margin: 2 }}>
-                        <TableHead style={{ width: '100%' }}>
-                            <TableRow style={{ width: '100%' }}>
+                <Paper style={{ display: 'flex', flexDirection: 'column', height: '40vh', overflowX: 'scroll', overFlowY: 'scroll' }}>
+                    <Table style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                        <TableHead style={{ display: 'flex', flexDirection: 'column' }}>
+                            <TableRow style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                 {this.props.cols.map((obj) =>
-                                    <TableCell>{obj.title}</TableCell>
+                                    <TableCell style={{
+                                        flex: '1',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        textAlign: 'center',
+                                        boxSizing: 'border-box',
+                                        paddingTop: '1rem',
+                                    }}>{obj.title}</TableCell>
                                 )}
-                                <TableCell></TableCell>
+                                <TableCell style={{ flex: '0.25' }}></TableCell>
                             </TableRow>
                         </TableHead>
-                        <TableBody>
+                        <TableBody style={{ display: 'flex', flexDirection: 'column' }}>
                             {
                                 this.state.rows.map((row, index) => {
                                     return (
-                                        <TableRow key={index}>
-                                            <TableCell >
-                                                <Input
-                                                    value={this.state.rows[index].category}></Input>
-                                            </TableCell>
-                                            <TableCell style={{width:'10%'}}>
-                                                <Input
-                                                    value={this.state.rows[index].amount}></Input>
-                                            </TableCell>
-                                            <TableCell>
-                                                <IconButton tooltip="remove"
-                                                    iconStyle={{ color: '#03a9f4' }}
-                                                    onClick={this.handleRemove(index)}>
+                                        <TableRow key={index} style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                                            {Object.keys(row).map((val) => {
+                                                return (
+                                                    <TableCell style={{ flex: '1', justifyContent: 'center', padding: '0 1.5rem' }}>
+                                                        <TextField
+                                                            variant='standard'
+                                                            placeholder={val}
+                                                            id={val + '' + index} name={val}
+                                                            fullWidth={true}
+                                                            onChange={this.handleChange(index, val)}
+                                                            value={row[val]} />
+                                                    </TableCell>
+                                                );
+                                            })}
+                                            <TableCell style={{ flex: '0.25', boxStyle: 'border-box', padding: 0 }}>
+                                                <IconButton iconStyle={{ color: '#03a9f4' }} margin='none' onClick={this.handleRemove(index)}>
                                                     <ContentRemoveCircle />
                                                 </IconButton>
                                             </TableCell>
+
                                         </TableRow>
                                     );
                                 })

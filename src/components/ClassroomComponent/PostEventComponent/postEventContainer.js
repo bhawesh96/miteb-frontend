@@ -90,19 +90,19 @@ class postEventComponent extends Component {
 
   getStepContent(stepIndex) {
     const cols = [
-      { title: 'Category',fieldName:'category' },
-      { title: 'Amount',fieldName:'amount' },
+      { title: 'Category', fieldName: 'category' },
+      { title: 'Amount', fieldName: 'amount' },
     ];
     switch (stepIndex) {
       case 0:
         return (
           <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
-            <div style={{ width: '100%', flexDirection: 'column', justifyContent: 'space-around' }}>
-              <div style={{ width: '100%' }}>
-                <EditTable
-                  cols={cols}
-                />
-              </div>
+            <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
+
+              <EditTable
+                cols={cols}
+              />
+
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
               <FlatButton
