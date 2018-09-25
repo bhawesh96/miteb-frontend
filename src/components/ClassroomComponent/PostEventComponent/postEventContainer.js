@@ -94,6 +94,10 @@ class postEventComponent extends Component {
       { title: 'Category', fieldName: 'category' },
       { title: 'Amount', fieldName: 'amount' },
     ];
+    const cols2 = [
+      {title: 'Category', fieldName: 'category'},
+      {title: 'Amount', fieldName: 'amount'},
+    ]
     const {creditErr, debitErr} = this.state;
     switch (stepIndex) {
       case 0:
@@ -101,13 +105,12 @@ class postEventComponent extends Component {
           <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
             <p style={{color:'#E30022', margin:'0.5rem'}}>{creditErr}</p>
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
-
               <EditTable
+                key = 'credit'
                 cols={cols}
                 onChange={this.handleCreditChange}
                 id='credit'
               />
-
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
               <FlatButton
@@ -132,7 +135,8 @@ class postEventComponent extends Component {
             <p style={{color:'#E30022', margin:'0.5rem'}}>{debitErr}</p>
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
               <EditTable
-                cols={cols}
+                key='debit'
+                cols={cols2}
                 onChange={this.handleDebitChange}
                 id='debit'
               />
@@ -297,6 +301,7 @@ class postEventComponent extends Component {
   }
 
   handleNext() {
+    this.forceUpdate();
     const { stepIndex } = this.state;
     if (stepIndex == 0 && this.state.creditArray.length == 0) {
       this.setState({creditErr:'Please Enter atleast one field'});
