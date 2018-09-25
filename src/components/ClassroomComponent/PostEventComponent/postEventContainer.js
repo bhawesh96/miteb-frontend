@@ -110,6 +110,7 @@ class postEventComponent extends Component {
                 cols={cols}
                 onChange={this.handleCreditChange}
                 id='credit'
+                rows={this.state.creditArray}
               />
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
@@ -139,6 +140,7 @@ class postEventComponent extends Component {
                 cols={cols2}
                 onChange={this.handleDebitChange}
                 id='debit'
+                rows = {this.state.debitArray}
               />
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>

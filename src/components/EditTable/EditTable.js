@@ -10,7 +10,7 @@ export default class EditTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            rows: [],
+            rows: this.props.rows,
         };
         this.handleAdd = this.handleAdd.bind(this);
         this.handleRemove = this.handleRemove.bind(this);
@@ -41,7 +41,8 @@ export default class EditTable extends Component {
             this.setState((prev) => {
                 let row = prev.rows[index];
                 row [col] =document.getElementById(col + '' + index).value;
-                return { rows: prev.rows.concat([row])};
+                prev.rows[index]=row;
+                return { rows: prev.rows};
             });
             this.props.onChange(this.state.rows);
         }
@@ -71,11 +72,10 @@ export default class EditTable extends Component {
                         </TableHead>
                         <TableBody style={{ display: 'flex', flexDirection: 'column' }}>
                             {
-                                this.state.rows && 
-                                this.state.rows.map((row, index) => {
+                                this.state.rows.map((row, rowindex) => {
                                     return (
                                         <TableRow
-                                            key={id + '_row_' + index}
+                                            key={id + '_row_' + rowindex}
                                             style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                             {Object.keys(row).map((val, index) => {
                                                 return (
@@ -86,17 +86,17 @@ export default class EditTable extends Component {
                                                             key={id+'_text_'+index}
                                                             variant='standard'
                                                             placeholder={val}
-                                                            id={val + '' + index} name={val}
+                                                            id={val + '' + rowindex} name={val}
                                                             fullWidth={true}
-                                                            onChange={this.handleChange(index, val)}
+                                                            onChange={this.handleChange(rowindex, val)}
                                                             value={row[val]} />
                                                     </TableCell>
                                                 );
                                             })}
                                             <TableCell
-                                                key ={id+'_remove_'+index}
+                                                key ={id+'_remove_'+rowindex}
                                                 style={{ flex: '0.25', boxStyle: 'border-box', padding: 0 }}>
-                                                <IconButton iconStyle={{ color: '#03a9f4' }} margin='none' onClick={this.handleRemove(index)}>
+                                                <IconButton iconStyle={{ color: '#03a9f4' }} margin='none' onClick={this.handleRemove(rowindex)}>
                                                     <ContentRemoveCircle />
                                                 </IconButton>
                                             </TableCell>
