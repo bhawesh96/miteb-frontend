@@ -48,8 +48,8 @@ class postEventComponent extends Component {
       externalParticipants: 0,
       tParticipantsError: '',
       eParticipantsError: '',
-      creditErr:'',
-      debitErr:'',
+      creditErr: '',
+      debitErr: '',
       fixedHeader: true,
       fixedFooter: false,
       stripedRows: false,
@@ -91,22 +91,22 @@ class postEventComponent extends Component {
 
   getStepContent(stepIndex) {
     const cols = [
-      { title: 'Category', fieldName: 'category' },
-      { title: 'Amount', fieldName: 'amount' },
+      { title: 'Category', fieldName: 'category', inputProps: {}, },
+      { title: 'Amount', fieldName: 'amount', inputProps: { style: { textAlign: 'right' } }, style: { textAlign: 'right' } },
     ];
     const cols2 = [
-      {title: 'Category', fieldName: 'category'},
-      {title: 'Amount', fieldName: 'amount'},
+      { title: 'Category', fieldName: 'category', inputProps: {} },
+      { title: 'Amount', fieldName: 'amount', inputProps: { style: { textAlign: 'right' } }, style: { textAlign: 'right' } },
     ]
-    const {creditErr, debitErr} = this.state;
+    const { creditErr, debitErr } = this.state;
     switch (stepIndex) {
       case 0:
         return (
-          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
-            <p style={{color:'#E30022', margin:'0.5rem'}}>{creditErr}</p>
+          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '1em' }}>
+            <p style={{ color: '#E30022', margin: '0.25rem' }}>{creditErr}</p>
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
               <EditTable
-                key = 'credit'
+                key='credit'
                 cols={cols}
                 onChange={this.handleCreditChange}
                 id='credit'
@@ -132,15 +132,15 @@ class postEventComponent extends Component {
 
       case 1:
         return (
-          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '3em' }}>
-            <p style={{color:'#E30022', margin:'0.5rem'}}>{debitErr}</p>
+          <div style={{ display: 'flex', textAlign: 'center', flexDirection: 'column', marginTop: '1em' }}>
+            <p style={{ color: '#E30022', margin: '0.25rem' }}>{debitErr}</p>
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
               <EditTable
                 key='debit'
                 cols={cols2}
                 onChange={this.handleDebitChange}
                 id='debit'
-                rows = {this.state.debitArray}
+                rows={this.state.debitArray}
               />
             </div>
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
@@ -163,29 +163,32 @@ class postEventComponent extends Component {
       case 2:
         return (
           <div style={{ textAlign: 'center', marginTop: '3em', boxSizing: 'border-box' }}>
-            <TextField
-              floatingLabelText={"Total participants"}
-              onBlur={this.handleTotalParticipants}
-              errorText={this.state.tParticipantsError}
-              required
-            />
-            <br></br>
-            <TextField
-              floatingLabelText={"External participants"}
-              onBlur={this.handleExternalParticipants}
-              errorText={this.state.eParticipantsError}
-              required
-            />
-            <br></br>
-            <TextField
-              multiLine={true}
-              rows={1}
-              style={{ textAlign: 'left' }}
-              floatingLabelText="Notes"
-              type="text"
-              onChange={this.handleNotes}
-              value={this.state.notes}
-            />
+            <div style={{height:'45vh'}}>
+              <TextField
+                floatingLabelText={"Total participants"}
+                onBlur={this.handleTotalParticipants}
+                errorText={this.state.tParticipantsError}
+                required
+              />
+              <br></br>
+              <TextField
+                floatingLabelText={"External participants"}
+                onBlur={this.handleExternalParticipants}
+                errorText={this.state.eParticipantsError}
+                required
+              />
+              <br></br>
+              <TextField
+                multiLine={true}
+                rows={1}
+                style={{ textAlign: 'left' }}
+                floatingLabelText="Notes"
+                type="text"
+                onChange={this.handleNotes}
+                value={this.state.notes}
+              />
+            </div>
+
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
               <FlatButton
                 label="Back"
@@ -207,8 +210,8 @@ class postEventComponent extends Component {
   handleCreditChange(rows) {
     this.setState({ creditArray: rows });
   }
-  handleDebitChange(rows){
-    this.setState({debitArray: rows});
+  handleDebitChange(rows) {
+    this.setState({ debitArray: rows });
   }
   handleNotes(e) {
     this.setState({ notes: e.target.value })
@@ -306,9 +309,9 @@ class postEventComponent extends Component {
     this.forceUpdate();
     const { stepIndex } = this.state;
     if (stepIndex == 0 && this.state.creditArray.length == 0) {
-      this.setState({creditErr:'Please Enter atleast one field'});
+      this.setState({ creditErr: 'Please Enter atleast one field' });
     } else if (stepIndex == 1 && this.state.debitArray.length == 0) {
-      this.setState({debitErr:'Please Enter atleast one field'});
+      this.setState({ debitErr: 'Please Enter atleast one field' });
     } else {
       this.setState({ creditErr: '', debitErr: '' })
       if (stepIndex < 2) {
@@ -362,9 +365,9 @@ class postEventComponent extends Component {
   render() {
     let { isMobile } = this.props;
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: isMobile ? '2em 0.25em' : '2em 7em' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: isMobile ? '1em 0.25em' : '1em 7em' }}>
         <Paper zDepth={2}>
-          <div style={{ width: '100%', maxWidth: 700, padding: '0em 0.5em', margin: 'auto', boxSizing: 'border-box', marginBottom: '10em' }}>
+          <div style={{ width: '100%', maxWidth: 700, height: 600, padding: '0em 0.5em', margin: 'auto', boxSizing: 'border-box', marginBottom: '10em' }}>
             {this.state.finished ? (<FinishedContainer event={this.props.currEvent} />) :
               (
                 isMobile ? (

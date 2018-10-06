@@ -65,6 +65,7 @@ export default class EditTable extends Component {
                                             textAlign: 'center',
                                             boxSizing: 'border-box',
                                             paddingTop: '1rem',
+                                            ...obj.style,
                                         }}>{obj.title}</TableCell>
                                 )}
                                 <TableCell style={{ flex: '0.25' }}></TableCell>
@@ -89,7 +90,9 @@ export default class EditTable extends Component {
                                                             id={val + '' + rowindex} name={val}
                                                             fullWidth={true}
                                                             onChange={this.handleChange(rowindex, val)}
-                                                            value={row[val]} />
+                                                            value={row[val]}
+                                                            inputProps={this.props.cols[index].inputProps}
+                                                            />
                                                     </TableCell>
                                                 );
                                             })}
