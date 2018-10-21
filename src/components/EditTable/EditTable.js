@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow, Input } from '@material-ui/core';
+import { Table, TableBody, TableCell, TableHead, TableRow, Input, Typography } from '@material-ui/core';
 import RaisedButton from 'material-ui/RaisedButton';
 import IconButton from 'material-ui/IconButton';
 import ContentRemoveCircle from 'material-ui/svg-icons/content/remove-circle';
@@ -40,9 +40,9 @@ export default class EditTable extends Component {
         return (event) => {
             this.setState((prev) => {
                 let row = prev.rows[index];
-                row [col] =document.getElementById(col + '' + index).value;
-                prev.rows[index]=row;
-                return { rows: prev.rows};
+                row[col] = document.getElementById(col + '' + index).value;
+                prev.rows[index] = row;
+                return { rows: prev.rows };
             });
             this.props.onChange(this.state.rows);
         }
@@ -51,8 +51,8 @@ export default class EditTable extends Component {
         const { id } = this.props;
         return (
             <div>
-                <Paper style={{ display: 'flex', flexDirection: 'column', height: '40vh', overflowX: 'scroll', overFlowY: 'scroll' }}>
-                    <Table style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly' }}>
+                <Paper style={{ /*display: 'flex', flexDirection: 'column',*/ height: '40vh', overflowX: 'scroll', overFlowY: 'scroll' }}>
+                    <Table style={{ /*display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly',*/ height:'40vh',overflowX:'scroll' }}>
                         <TableHead style={{ display: 'flex', flexDirection: 'column' }}>
                             <TableRow style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                 {this.props.cols.map((obj, index) =>
@@ -66,7 +66,7 @@ export default class EditTable extends Component {
                                             boxSizing: 'border-box',
                                             paddingTop: '1rem',
                                             ...obj.style,
-                                        }}>{obj.title}</TableCell>
+                                        }}><Typography variant='body1' >{obj.title}</Typography></TableCell>
                                 )}
                                 <TableCell style={{ flex: '0.25' }}></TableCell>
                             </TableRow>
@@ -77,14 +77,19 @@ export default class EditTable extends Component {
                                     return (
                                         <TableRow
                                             key={id + '_row_' + rowindex}
-                                            style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                                            style={{
+                                                boxSizing: 'border-box',
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                justifyContent: 'space-evenly', height: '4rem', padding: '0.5rem 0rem'
+                                            }}>
                                             {Object.keys(row).map((val, index) => {
                                                 return (
                                                     <TableCell
                                                         key={id + '_rowcell_' + index}
-                                                        style={{ flex: '1', justifyContent: 'center', padding: '0 1.5rem' }}>
+                                                        style={{ flex: '1', justifyContent: 'center', padding: '0rem 1.5rem' }}>
                                                         <TextField
-                                                            key={id+'_text_'+index}
+                                                            key={id + '_text_' + index}
                                                             variant='standard'
                                                             placeholder={val}
                                                             id={val + '' + rowindex} name={val}
@@ -92,12 +97,12 @@ export default class EditTable extends Component {
                                                             onChange={this.handleChange(rowindex, val)}
                                                             value={row[val]}
                                                             inputProps={this.props.cols[index].inputProps}
-                                                            />
+                                                        />
                                                     </TableCell>
                                                 );
                                             })}
                                             <TableCell
-                                                key ={id+'_remove_'+rowindex}
+                                                key={id + '_remove_' + rowindex}
                                                 style={{ flex: '0.25', boxStyle: 'border-box', padding: 0 }}>
                                                 <IconButton iconStyle={{ color: '#03a9f4' }} margin='none' onClick={this.handleRemove(rowindex)}>
                                                     <ContentRemoveCircle />
