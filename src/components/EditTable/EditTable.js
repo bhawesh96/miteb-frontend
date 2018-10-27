@@ -55,7 +55,7 @@ export default class EditTable extends Component {
                     <Table style={{ /*display: 'flex', flexDirection: 'column', justifyContent: 'space-evenly',*/ height:'40vh',overflowX:'scroll' }}>
                         <TableHead style={{ display: 'flex', flexDirection: 'column' }}>
                             <TableRow style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                {this.props.cols.map((obj, index) =>
+                                {this.props.cols.map((obj, index) =>(
                                     <TableCell
                                         key={id + '_head_' + index}
                                         style={{
@@ -67,7 +67,7 @@ export default class EditTable extends Component {
                                             paddingTop: '1rem',
                                             ...obj.style,
                                         }}><Typography variant='body1' >{obj.title}</Typography></TableCell>
-                                )}
+                                ))}
                                 <TableCell style={{ flex: '0.25' }}></TableCell>
                             </TableRow>
                         </TableHead>

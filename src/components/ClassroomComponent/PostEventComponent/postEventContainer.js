@@ -33,6 +33,7 @@ class postEventComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      disableNext: false,
       stepIndex: 0,
       creditArray: [],
       debitArray: [],
@@ -69,6 +70,14 @@ class postEventComponent extends Component {
       notes: '',
       finished: false
     };
+    this.cols = [
+      { title: 'Category', fieldName: 'category', inputProps: {}, },
+      { title: 'Amount', fieldName: 'amount', inputProps: { style: { textAlign: 'right' } }, style: { textAlign: 'right' } },
+    ];
+    this.cols2 = [
+      { title: 'Category', fieldName: 'category', inputProps: {} },
+      { title: 'Amount', fieldName: 'amount', inputProps: { style: { textAlign: 'right' } }, style: { textAlign: 'right' } },
+    ]
     this.handleNext = this.handleNext.bind(this);
     this.handlePrev = this.handlePrev.bind(this);
     this.getStepContent = this.getStepContent.bind(this);
@@ -90,14 +99,7 @@ class postEventComponent extends Component {
   }
 
   getStepContent(stepIndex) {
-    const cols = [
-      { title: 'Category', fieldName: 'category', inputProps: {}, },
-      { title: 'Amount', fieldName: 'amount', inputProps: { style: { textAlign: 'right' } }, style: { textAlign: 'right' } },
-    ];
-    const cols2 = [
-      { title: 'Category', fieldName: 'category', inputProps: {} },
-      { title: 'Amount', fieldName: 'amount', inputProps: { style: { textAlign: 'right' } }, style: { textAlign: 'right' } },
-    ]
+
     const { creditErr, debitErr } = this.state;
     switch (stepIndex) {
       case 0:
@@ -107,7 +109,7 @@ class postEventComponent extends Component {
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
               <EditTable
                 key='credit'
-                cols={cols}
+                cols={this.cols}
                 onChange={this.handleCreditChange}
                 id='credit'
                 rows={this.state.creditArray}
@@ -116,11 +118,12 @@ class postEventComponent extends Component {
             <div style={{ height: '25px', marginBottom: 12, marginTop: 40 }}>
               <FlatButton
                 label="Back"
-                disabled={this.state.stepIndex === 0}
+                disabled={this.state.stepIndex == 0}
                 onClick={this.handlePrev}
                 style={{ float: 'left' }}
               />
               <RaisedButton
+                disabled={this.state.disableNext}
                 label={this.state.stepIndex === 2 ? 'Submit' : 'Next'}
                 primary={true}
                 onClick={this.state.stepIndex === 2 ? this.handleSubmit : this.handleNext}
@@ -137,7 +140,7 @@ class postEventComponent extends Component {
             <div style={{ flexDirection: 'column', justifyContent: 'space-around' }}>
               <EditTable
                 key='debit'
-                cols={cols2}
+                cols={this.cols2}
                 onChange={this.handleDebitChange}
                 id='debit'
                 rows={this.state.debitArray}
@@ -163,17 +166,21 @@ class postEventComponent extends Component {
       case 2:
         return (
           <div style={{ textAlign: 'center', marginTop: '3em', boxSizing: 'border-box' }}>
-            <div style={{height:'45vh'}}>
+            <div style={{ height: '45vh' }}>
               <TextField
                 floatingLabelText={"Total participants"}
+                value={this.state.totalParticipants}
                 onBlur={this.handleTotalParticipants}
+                onChange={this.handleTotalParticipants}
                 errorText={this.state.tParticipantsError}
                 required
               />
               <br></br>
               <TextField
                 floatingLabelText={"External participants"}
+                value={this.state.externalParticipants}
                 onBlur={this.handleExternalParticipants}
+                onChange={this.handleExternalParticipants}
                 errorText={this.state.eParticipantsError}
                 required
               />
@@ -208,10 +215,10 @@ class postEventComponent extends Component {
     }
   }
   handleCreditChange(rows) {
-    this.setState({ creditArray: rows });
+    this.setState({ creditArray: rows, creditErr: '' });
   }
   handleDebitChange(rows) {
-    this.setState({ debitArray: rows });
+    this.setState({ debitArray: rows, debitErr: '' });
   }
   handleNotes(e) {
     this.setState({ notes: e.target.value })
@@ -308,12 +315,36 @@ class postEventComponent extends Component {
   handleNext() {
     this.forceUpdate();
     const { stepIndex } = this.state;
-    if (stepIndex == 0 && this.state.creditArray.length == 0) {
-      this.setState({ creditErr: 'Please Enter atleast one field' });
-    } else if (stepIndex == 1 && this.state.debitArray.length == 0) {
-      this.setState({ debitErr: 'Please Enter atleast one field' });
+    var flagCred = false;
+    var flagDeb = false;
+    this.state.creditArray.forEach((val) => {
+      this.cols.forEach((field) => {
+        if (val[field['fieldName']] === '') {
+          flagCred = true;
+        }
+      });
+    });
+    this.state.debitArray.forEach((val) => {
+      this.cols.forEach((field) => {
+        if (val[field['fieldName']] === '') {
+          flagDeb = true;
+        }
+      });
+    });
+    if ((stepIndex == 0 && this.state.creditArray.length == 0) || flagCred) {
+      if (flagCred) {
+        this.setState({ creditErr: '1 or more fields are not filled' });
+      } else {
+        this.setState({ creditErr: 'Please Enter atleast one field' });
+      }
+    } else if ((stepIndex == 1 && this.state.debitArray.length == 0) || flagDeb) {
+      if (flagDeb) {
+        this.setState({ debitErr: '1 or more fields are not filled' });
+      } else {
+        this.setState({ debitErr: 'Please Enter atleast one field' });
+      }
     } else {
-      this.setState({ creditErr: '', debitErr: '' })
+      this.setState({ creditErr: '', debitErr: '', });
       if (stepIndex < 2) {
         this.setState({ stepIndex: stepIndex + 1 });
       }
@@ -344,6 +375,7 @@ class postEventComponent extends Component {
       this.setState({ tParticipantsError: '', eParticipantsError: '' });
       var eventID = this.props.currEvent.key;
       var updates = {};
+      console.log(eventID);
       updates['/events/' + eventID + '/postEventDetails/creditArray'] = this.state.creditArray;
       updates['/events/' + eventID + '/postEventDetails/debitArray'] = this.state.debitArray;
       updates['/events/' + eventID + '/postEventDetails/totalParticipants'] = this.state.totalParticipants;
@@ -355,11 +387,15 @@ class postEventComponent extends Component {
   }
 
   handleTotalParticipants(e) {
-    this.setState({ totalParticipants: e.target.value })
+    if (!isNaN(e.target.value)) {
+      this.setState({ totalParticipants: e.target.value })
+    }
   }
 
   handleExternalParticipants(e) {
-    this.setState({ externalParticipants: e.target.value })
+    if (!isNaN(e.target.value)) {
+      this.setState({ externalParticipants: e.target.value })
+    }
   }
 
   render() {
