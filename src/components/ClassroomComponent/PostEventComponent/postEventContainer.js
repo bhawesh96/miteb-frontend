@@ -369,7 +369,7 @@ class postEventComponent extends Component {
       }
     } else {
       this.setState((state) => {
-        return { finished: true }
+        return { finished: true, tParticipantsError: '', eParticipantsError: '' };
       }
       )
       this.setState({ tParticipantsError: '', eParticipantsError: '' });
@@ -388,13 +388,13 @@ class postEventComponent extends Component {
 
   handleTotalParticipants(e) {
     if (!isNaN(e.target.value)) {
-      this.setState({ totalParticipants: e.target.value })
+      this.setState({ totalParticipants: e.target.value, tParticipantsError: '' });
     }
   }
 
   handleExternalParticipants(e) {
     if (!isNaN(e.target.value)) {
-      this.setState({ externalParticipants: e.target.value })
+      this.setState({ externalParticipants: e.target.value, eParticipantsError: '' });
     }
   }
 
